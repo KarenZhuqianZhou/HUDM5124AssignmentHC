@@ -1,0 +1,52 @@
+---
+title: "HUDM5124AssignmentHC"
+author: "Zhuqian Zhou"
+date: "2017/4/3"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#1
+**Using the compiled (mean) Olympic winter sports proximity ratings, apply a hierarchical clustering method, and draw the resulting dendrogram. You have several options:**
+**a. do single-link clustering, by hand**
+**b. do average-link clustering (by hand, SPSS, or R)**
+**In one or two sentences, interpret the resulting dendrogram (tree).**
+
+I choose to do clustering by R.
+```{r}
+x <- read.table("olympic data mean dissim.txt") # read in the data
+d <- dist(x, method = "euclidean") # for "hclust" package, first create a distance matrix from multivariate data
+sl <- hclust(d, method="single") # do single-link clustering
+plot(sl) # display dendogram for single-link
+al <- hclust(d, method="average") # do average-link clustering
+plot(al) # display dendogram for average-link
+```
+Though the height of the tree of SL is smaller than that of the tree of AL, the two dendrograms have the same clusters for Olympic winter sports.
+At the bottom layer, 12 sports were clustered in to 6 pairs, i.e. art-related (icedance, figure), speed-on-ice (hockey, speedSkt), long-distance skiing (XctySki, biathlon), sledge-related skiing (bobsled, luge), high-speed-on-snow (slalom, downhill), skillful skiing (snowbrd, skiJump).
+Then, 4 of the 6 pairs were clustered into 2 groups, i.e. on ice (art-related, speed-on-ice) and high-risk skiing (speed-on-snow, skillful skiing).
+Futher, sledge-related skiing (bobsled, luge) and high-risk skiing (high-speed-on-snow, skillful skiing) were clusterd together as speed-on-snow (sledge-related skiing, high-risk skiing) which continued to be clustered with long-distance skiing (XctySki, biathlon) as a larger cluster, on snow (long-distance skiing, speed-on-snow).
+Finally, on ice (art-related, speed-on-ice) and on snow (long-distance skiing, speed-on-snow) were clustered into one set, i.e. winter sports.
+
+#2
+**Using the posted data set on crimes for a sample of American cities (from Hartigan, 1975), apply Ward's method (using SPSS CLUSTER or R) to obtain a hierarchical clustering of the cities.**
+**In one or two sentences, interpret the resulting dendrogram (tree).**
+```{r}
+y <- read.table("Crimes_Hartigan_1975.txt", sep = " ", header = TRUE)
+rownames(y) <- y[,1]
+y <- y[,-1]
+dy <- dist(y, method = "euclidean")
+W.D2 <- hclust(dy, method="ward.D2")
+plot(W.D2)
+W.D <- hclust(dy, method="ward.D")
+plot(W.D)
+```
+Firstly, at the bottom layer, 12 out of the 16 cities were clustered into 6 pairs. (Atlanta, Tucson), (Boston, Chicago), (Los Angeles, New York), (Honolulu, Portland), (Detroit, Washington), (Houston, Kansass City).
+Secondly, 8 out of the 10 clusters were further merged into 4 clusters (thus 6 clusters at this layer), i.e. (Hartford, (Atlanta, Tucson)), (New Orleans, (Boston, Chicago)), (Denver, (Honolulu, Portland)), (Dallas, (Houston, Kansass City)).
+Thirdly, 2 out of the 6 clusters were combined into one clan (thus 5 clusters so far, i.e. ((Detroit, Washington), (Dallas, (Houston, Kansass City))).
+Fourthly, 4 out of the 5 clusters were combined into 2 clans (thus 3 clusters hitherto), i.e. ((Hartford, (Atlanta, Tucson)), (New Orleans, (Boston, Chicago))) and ((Denver, (Honolulu, Portland)), (Dallas, (Houston, Kansass City))).
+Finally, 2 out of three were combined together, i.e. ((Los Angeles, New York), ((Denver, (Honolulu, Portland)), (Dallas, (Houston, Kansass City)))) and the 2 remaining clusters belong to a larger group, American City.
+Overall, cities were clustered together accroding to the number of violent crimes (e.g. murder, rape, robbery and assult) and financial crimes (e.g. burglary, larceny, and auto_theft).
+
